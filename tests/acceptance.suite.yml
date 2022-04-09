@@ -12,5 +12,5 @@ modules:
         - Asserts
     config:
       MailCatcher:
-        url: 'http://localhost'
-        port: '1080'
+        url: '127.0.0.1'
+        port: '8025'

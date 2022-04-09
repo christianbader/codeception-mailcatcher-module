@@ -20,7 +20,7 @@ class Acceptance extends \Codeception\Module
         $phpmailer = new PHPMailer();
         $phpmailer->isSMTP();
         $phpmailer->Host = '127.0.0.1';
-        $phpmailer->Port = 1025;
+        $phpmailer->Port = 2035;
         if (null !== $encoding) {
             $phpmailer->Encoding = $encoding;
         }

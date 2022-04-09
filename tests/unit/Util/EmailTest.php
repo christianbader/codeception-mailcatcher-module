@@ -16,10 +16,12 @@ class EmailTest extends \Codeception\Test\Unit
 
     public function testCreateFromMailcatcherData()
     {
+        $data['Headers']['Subject'][0] = 'Some subject';
+
         $email = Email::createFromMailcatcherData([
-            'id' => 1,
-            'recipients' => ['some@email.com'],
-            'subject' => 'Some subject',
+            'ID' => 1,
+            'From' => ['some@email.com'],
+            'Content' => $data,
             'source' => 'Source body'
         ]);
 

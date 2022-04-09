@@ -44,7 +44,7 @@ class MailCatcherTest extends \Codeception\Test\Unit
         $mailcatcher->resetEmails();
 
         $this->assertEquals('DELETE', $handler->getLastRequest()->getMethod());
-        $this->assertEquals('/messages', $handler->getLastRequest()->getRequestTarget());
+        $this->assertEquals('/api/v1/messages', $handler->getLastRequest()->getRequestTarget());
     }
 
     public function testLastMessageNoMessages()
@@ -122,8 +122,8 @@ class MailCatcherTest extends \Codeception\Test\Unit
         $handler = new MockHandler([
             new Response(200, [], json_encode([
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'sender' => 'sender@example.com',
                     'recipients' => ['user@example.com'],
                 ],
@@ -151,20 +151,20 @@ class MailCatcherTest extends \Codeception\Test\Unit
         $handler = new MockHandler([
             new Response(200, [], json_encode([
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'sender' => 'sender@example.com',
                     'recipients' => ['user@example.com'],
                 ],
                 [
-                    'id' => 2,
-                    'created_at' => date('c'),
+                    'ID' => 2,
+                    'Created' => date('c'),
                     'sender' => 'sender2@example.com',
                     'recipients' => ['user2@example.com'],
                 ],
                 [
-                    'id' => 3,
-                    'created_at' => date('c'),
+                    'ID' => 3,
+                    'Created' => date('c'),
                     'sender' => 'sender3@example.com',
                     'recipients' => ['user3@example.com'],
                 ]
@@ -218,13 +218,13 @@ class MailCatcherTest extends \Codeception\Test\Unit
         $handler = new MockHandler([
             new Response(200, [], json_encode([
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'recipients' => ['user@example.com'],
                 ],
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'recipients' => ['user2@example.com'],
                 ]
             ]))
@@ -242,13 +242,13 @@ class MailCatcherTest extends \Codeception\Test\Unit
         $handler = new MockHandler([
             new Response(200, [], json_encode([
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'recipients' => ['user@example.com'],
                 ],
                 [
-                    'id' => 1,
-                    'created_at' => date('c'),
+                    'ID' => 1,
+                    'Created' => date('c'),
                     'recipients' => ['user2@example.com'],
                 ]
             ]))

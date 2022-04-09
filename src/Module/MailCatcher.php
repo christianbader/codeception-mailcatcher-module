@@ -49,7 +49,7 @@ class MailCatcher extends Module
      **/
     public function resetEmails(): void
     {
-        $this->mailcatcher->delete('/messages');
+        $this->mailcatcher->delete('/api/v1/messages');
     }
 
 
@@ -158,7 +158,7 @@ class MailCatcher extends Module
 
         $last = array_shift($messages);
 
-        return $this->emailFromId($last['id']);
+        return $this->emailFromId($last['ID']);
     }
 
     public function lastMessageTo(string $address): \Codeception\Util\Email
@@ -170,9 +170,9 @@ class MailCatcher extends Module
         }
 
         foreach ($messages as $message) {
-            foreach ($message['recipients'] as $recipient) {
-                if (strpos($recipient, $address) !== false) {
-                    $ids[] = $message['id'];
+            foreach ($message['To'] as $recipient) {
+                if (strpos($recipient['Mailbox'] . '@' . $recipient['Domain'], $address) !== false) {
+                    $ids[] = $message['ID'];
                 }
             }
         }
@@ -194,14 +194,14 @@ class MailCatcher extends Module
 
         foreach ($messages as $message) {
             if (strpos($message['sender'], $address)) {
-                $ids[] = $message['id'];
+                $ids[] = $message['ID'];
             }
 
             // @todo deprecated, remove
             foreach ($message['recipients'] as $recipient) {
                 if (strpos($recipient, $address) !== false) {
                     trigger_error('`lastMessageFrom` no longer accepts a recipient email.', E_USER_DEPRECATED);
-                    $ids[] = $message['id'];
+                    $ids[] = $message['ID'];
                 }
             }
         }
@@ -372,13 +372,13 @@ class MailCatcher extends Module
      **/
     protected function messages(): array
     {
-        $response = $this->mailcatcher->get('/messages');
+        $response = $this->mailcatcher->get('/api/v1/messages');
         $messages = json_decode($response->getBody(), true);
         // Ensure messages are shown in the order they were recieved
         // https://github.com/sj26/mailcatcher/pull/184
         usort($messages, function ($messageA, $messageB): int {
-            $sortKeyA = $messageA['created_at'] . $messageA['id'];
-            $sortKeyB = $messageB['created_at'] . $messageB['id'];
+            $sortKeyA = $messageA['Created'] . $messageA['ID'];
+            $sortKeyB = $messageB['Created'] . $messageB['ID'];
             return ($sortKeyA > $sortKeyB) ? -1 : 1;
         });
         return $messages;
@@ -389,10 +389,10 @@ class MailCatcher extends Module
      */
     protected function emailFromId($id): \Codeception\Util\Email
     {
-        $response = $this->mailcatcher->get("/messages/{$id}.json");
-        $plainMessage = $this->mailcatcher->get("/messages/{$id}.source");
+        $response = $this->mailcatcher->get("/api/v1/messages/{$id}");
+        $plainMessage = $this->mailcatcher->get("/api/v1/messages/{$id}");
         $messageData = json_decode($response->getBody(), true);
-        $messageData['source'] = $plainMessage->getBody()->getContents();
+        $messageData['source'] = $messageData['Raw']['Data'];
 
         return Email::createFromMailcatcherData($messageData);
     }
